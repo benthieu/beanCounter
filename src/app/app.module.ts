@@ -1,24 +1,17 @@
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {HttpClientModule} from '@angular/common/http';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
 import {BrowserModule} from '@angular/platform-browser';
-// NG Translate
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import '@polymer/font-roboto/roboto.js';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'reflect-metadata';
 import '../polyfills';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {CoreModule} from './core/core.module';
-import {HomeModule} from './home/home.module';
 import {SharedModule} from './shared/shared.module';
-
-
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,20 +21,14 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     CoreModule,
     SharedModule,
-    HomeModule,
     AppRoutingModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    })
+    BrowserAnimationsModule,
+    MatButtonModule,
+    DragDropModule
   ],
-  providers: [],
-  bootstrap: [AppComponent],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ]
+  providers: [
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

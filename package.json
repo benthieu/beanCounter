@@ -1,12 +1,6 @@
 {
-  "name": "angular-electron",
-  "version": "6.3.1",
-  "description": "Angular 8 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
-  "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
-  },
+  "name": "bean-counter",
+  "version": "1.0.0",
   "keywords": [
     "angular",
     "angular 8",
@@ -15,7 +9,7 @@
     "sass"
   ],
   "main": "main.js",
-  "private": true,
+  "private": false,
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "ng": "ng",
@@ -31,6 +25,7 @@
     "electron:linux": "npm run build:prod && electron-builder build --linux",
     "electron:windows": "npm run build:prod && electron-builder build --windows",
     "electron:mac": "npm run build:prod && electron-builder build --mac",
+    "electron:test": "electron . --serve",
     "test": "ng test",
     "e2e": "npm run build:prod && mocha --timeout 300000 --require ts-node/register e2e/**/*.spec.ts",
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
@@ -49,8 +44,6 @@
     "@angular/platform-browser": "8.2.12",
     "@angular/platform-browser-dynamic": "8.2.12",
     "@angular/router": "8.2.12",
-    "@ngx-translate/core": "11.0.1",
-    "@ngx-translate/http-loader": "4.0.0",
     "@types/jasmine": "3.3.16",
     "@types/jasminewd2": "2.0.6",
     "@types/mocha": "5.2.7",
@@ -84,9 +77,17 @@
     "node": ">=10.9.0"
   },
   "dependencies": {
-    "@polymer/paper-dialog": "^3.0.1",
+    "@angular/animations": "^8.0.0 || ^9.0.0-0",
+    "@angular/cdk": "~8.2.3",
+    "@angular/forms": "^8.0.0 || ^9.0.0-0",
+    "@angular/material": "^8.2.3",
     "@types/electron-json-storage": "^4.0.0",
+    "app-root-dir": "^1.0.2",
     "electron-json-storage": "^4.1.8",
-    "uuid": "^3.3.3"
+    "ffmpeg-static": "^2.7.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "normalize.css": "^8.0.1",
+    "uuid": "^3.3.3",
+    "youtube-mp3-downloader": "^0.6.3"
   }
 }

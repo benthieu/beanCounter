@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 /**
  * Custom angular webpack configuration
  */
@@ -19,6 +20,10 @@ module.exports = (config, options) => {
             break;
         }
     }
-
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env.FLUENTFFMPEG_COV': false,
+      }),
+    );
     return config;
 }

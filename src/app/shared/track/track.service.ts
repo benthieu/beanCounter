@@ -1,17 +1,17 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import * as Storage from 'electron-json-storage';
+import {LocalStorageService} from '../local-storage/local-storage.service';
 const uuidv4 = require('uuid/v4');
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocalStorageService {
+export class TrackService {
 
   private trackList = new BehaviorSubject<Array<Track>>([]);
 
-  constructor() {
-    this.getStorage().then((storeData: Array<Track>) => {
+  constructor(private localStorageService: LocalStorageService) {
+    this.localStorageService.getStorage('trackList').then((storeData: Array<Track>) => {
       this.trackList.next(storeData);
     });
   }
@@ -22,7 +22,7 @@ export class LocalStorageService {
 
   public setTracks(tracks: Array<Track>): void {
     this.trackList.next(tracks);
-    Storage.set('trackList', tracks, () => {});
+    this.localStorageService.setStorage('trackList', tracks);
   }
 
   public newTrack(description: string): void {
@@ -33,16 +33,6 @@ export class LocalStorageService {
       sort: 0
     });
     this.setTracks(this.trackList.value);
-  }
-
-  public async getStorage(): Promise<Array<Track>> {
-    return new Promise((resolve) => {
-      Storage.get('trackList', (error, storageData: Array<Track>) => {
-        if (storageData && storageData.length) {
-          return resolve(storageData);
-        }
-      });
-    });
   }
 }
 

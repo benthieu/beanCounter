@@ -1,1 +1,20 @@
-<router-outlet></router-outlet>
+<aside class="track-list">
+  <ng-container *ngIf="(trackList$ | async) as tracks">
+    <ul>
+      <li *ngFor="let track of tracks">
+          <button mat-flat-button>{{ track.id }}</button>
+      </li>
+    </ul>
+  </ng-container>
+  <button mat-flat-button (click)="addTrack()">Add track</button>
+</aside>
+<div
+  class="seperator"
+  cdkDrag
+  cdkDragLockAxis="x"
+  (cdkDragMoved)="seperatorMoved($event)"
+  (cdkDragStarted)="seperatorMoveStart($event)"
+  (cdkDragEnded)="seperatorMoveEnd($event)"></div>
+<section class="time-capsule">
+  <router-outlet></router-outlet>
+</section>
