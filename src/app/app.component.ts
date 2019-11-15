@@ -1,11 +1,14 @@
 import {CdkDragMove, CdkDragEnd, CdkDragStart} from '@angular/cdk/drag-drop';
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {tap, map, switchMap} from 'rxjs/operators';
 import {AppConfig} from '../environments/environment';
 import {ElectronService} from './core/services';
 import {TrackService, Track} from './shared/track/track.service';
-import {YTDownloadService} from './shared/ytdownload/ytdownload.service';
+import {YTDownloadService, downloadStatus, DownloadWatcher} from './shared/ytdownload/ytdownload.service';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {AddLinkComponent} from './add-link/add-link.component';
+import {DownloadManagerService} from './shared/download-manager/download-manager.service';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +23,8 @@ export class AppComponent implements OnInit {
     private trackService: TrackService,
     private elRef: ElementRef,
     private renderer: Renderer2,
-    private ytdownload: YTDownloadService
+    private _bottomSheet: MatBottomSheet,
+    private downloadManagerService: DownloadManagerService
   ) {
     console.log('AppConfig', AppConfig);
 
@@ -35,17 +39,21 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.trackList$ = this.trackService.getTracks().pipe(
-      tap((tracks) => console.log('tracks', tracks))
-    );
+    this.trackService.loadFromStorage().then(() => {
+      this.trackList$ = this.trackService.getTracks();
+      this.downloadManagerService.startWatching();
+    });
   }
 
   public addTrack(): void {
-    this.trackService.newTrack('test');
+    // this.trackService.newTrack('test');
+    this._bottomSheet.open(AddLinkComponent);
   }
 
   public seperatorMoved(event: CdkDragMove): void {
-    this.renderer.setStyle(this.elRef.nativeElement, 'grid-template-columns', `${event.pointerPosition.x}px 2px auto`);
+    let calculated = window.innerWidth - event.pointerPosition.x;
+    calculated = calculated < 300 ? 300 : calculated;
+    this.renderer.setStyle(this.elRef.nativeElement, 'grid-template-columns', `auto 2px ${calculated}px`);
   }
 
   public seperatorMoveStart(event: CdkDragStart): void {

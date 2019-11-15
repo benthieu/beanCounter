@@ -1,20 +1,40 @@
+<mat-toolbar color="primary">
+  <span>Spotifly</span>
+  <button mat-icon-button matTooltip="Add new track to download" (click)="addTrack()">
+    <mat-icon>add_circle_outline</mat-icon>
+  </button>
+  <button mat-icon-button matTooltip="Set download folder">
+    <mat-icon>drive_folder_upload</mat-icon>
+  </button>
+</mat-toolbar>
 <aside class="track-list">
+
+
   <ng-container *ngIf="(trackList$ | async) as tracks">
-    <ul>
+    <ul class="yt-table">
+      <li class="header">
+        <span>Date</span>
+        <span>Link-Id</span>
+        <span>Artist</span>
+        <span>Title</span>
+        <span>State</span>
+      </li>
       <li *ngFor="let track of tracks">
-          <button mat-flat-button>{{ track.id }}</button>
+          <span>{{ track.createDate | date:'dd.MM.yyyy, HH:mm' }}</span>
+          <span>{{ track.link }}</span>
+          <span>{{ track.artist }}</span>
+          <span>{{ track.title }}</span>
+          <span>
+            <app-download-status [track]="track"></app-download-status>
+          </span>
       </li>
     </ul>
   </ng-container>
-  <button mat-flat-button (click)="addTrack()">Add track</button>
+
+
 </aside>
-<div
-  class="seperator"
-  cdkDrag
-  cdkDragLockAxis="x"
-  (cdkDragMoved)="seperatorMoved($event)"
-  (cdkDragStarted)="seperatorMoveStart($event)"
-  (cdkDragEnded)="seperatorMoveEnd($event)"></div>
+<div class="seperator" cdkDrag cdkDragLockAxis="x" (cdkDragMoved)="seperatorMoved($event)"
+  (cdkDragStarted)="seperatorMoveStart($event)" (cdkDragEnded)="seperatorMoveEnd($event)"></div>
 <section class="time-capsule">
   <router-outlet></router-outlet>
 </section>
