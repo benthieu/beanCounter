@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {TrackDetailsComponent} from './track-details.component';
-import {MatButtonModule, MatIconModule} from '@angular/material';
+import {MatButtonModule, MatIconModule, MatTooltipModule} from '@angular/material';
 
 
 
@@ -10,7 +10,8 @@ import {MatButtonModule, MatIconModule} from '@angular/material';
   imports: [
     CommonModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   exports: [TrackDetailsComponent]
 })

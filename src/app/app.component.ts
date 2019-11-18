@@ -8,6 +8,7 @@ import {ElectronService} from './core/services';
 import {DownloadManagerService} from './shared/download-manager/download-manager.service';
 import {SettingsService} from './shared/settings/settings.service';
 import {Track, TrackService} from './shared/track/track.service';
+import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import {Track, TrackService} from './shared/track/track.service';
 export class AppComponent implements OnInit {
   public trackList$: Observable<Array<Track>>;
   public downloadFolder: string;
+  public activatedTrackId = '';
 
   constructor(
     public electronService: ElectronService,
@@ -40,7 +42,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.trackList$ = this.trackService.getTracks();
+    this.trackList$ = this.trackService.getTracks().pipe(
+      tap(() => {
+         this.activatedTrackId = this.trackService.activatedTrack;
+      })
+    );
     this.downloadManagerService.startWatching();
     this.trackService.loadFromStorage();
     this.settingsService.loadFromStorage();

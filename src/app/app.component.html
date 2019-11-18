@@ -21,7 +21,7 @@
       <span>State</span>
     </li>
     <ng-container *ngIf="(trackList$ | async) as tracks">
-    <li *ngFor="let track of tracks" (click)="activateTrack(track)">
+    <li *ngFor="let track of tracks" (click)="activateTrack(track)" [class.activated]="track.id===activatedTrackId">
       <span>{{ track.createDate | date:'dd.MM.yyyy, HH:mm' }}</span>
       <span>{{ track.link }}</span>
       <span>{{ track.artist }}</span>

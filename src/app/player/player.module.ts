@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {PlayerComponent} from './player.component';
-import {MatIconModule, MatButtonModule} from '@angular/material';
+import {MatIconModule, MatButtonModule, MatTooltipModule} from '@angular/material';
 
 
 
@@ -10,7 +10,8 @@ import {MatIconModule, MatButtonModule} from '@angular/material';
   imports: [
     CommonModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule
   ],
   exports: [PlayerComponent]
 })

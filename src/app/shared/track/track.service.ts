@@ -12,7 +12,8 @@ export class TrackService {
 
   private trackList = new BehaviorSubject<Array<Track>>([]);
   private tracks: Array<Track>;
-  private activatedTrack: string;
+  public activatedTrack: string;
+  public playingTrack: string;
 
   constructor(private localStorageService: LocalStorageService,
     private _ngZone: NgZone) {
@@ -34,6 +35,16 @@ export class TrackService {
     this.trackList.next(this.tracks);
   }
 
+  public playTrack(track: Track): void {
+    this.playingTrack = track.id;
+    this.trackList.next(this.tracks);
+  }
+
+  public playActivatedTrack(): void {
+    this.playingTrack = this.activatedTrack;
+    this.trackList.next(this.tracks);
+  }
+
   public getTracks(): Observable<Array<Track>> {
     return this.trackList.asObservable();
   }
@@ -42,6 +53,14 @@ export class TrackService {
     return this.trackList.pipe(
       switchMap((tracks: Array<Track>) => {
         return of(tracks.find((track: Track) => track.id === this.activatedTrack));
+      })
+    );
+  }
+
+  public getPlayingTrack(): Observable<Track> {
+    return this.trackList.pipe(
+      switchMap((tracks: Array<Track>) => {
+        return of(tracks.find((track: Track) => track.id === this.playingTrack));
       })
     );
   }

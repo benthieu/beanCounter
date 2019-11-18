@@ -31,4 +31,8 @@ export class TrackDetailsComponent implements OnInit {
     this.trackService.deleteTrack(this.activeTrack);
   }
 
+  playTrack(): void {
+    this.trackService.playTrack(this.activeTrack);
+  }
+
 }
