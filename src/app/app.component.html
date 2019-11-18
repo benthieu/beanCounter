@@ -21,7 +21,7 @@
       <span>State</span>
     </li>
     <ng-container *ngIf="(trackList$ | async) as tracks">
-    <li *ngFor="let track of tracks">
+    <li *ngFor="let track of tracks" (click)="activateTrack(track)">
       <span>{{ track.createDate | date:'dd.MM.yyyy, HH:mm' }}</span>
       <span>{{ track.link }}</span>
       <span>{{ track.artist }}</span>
@@ -37,6 +37,7 @@
 </aside>
 <div class="seperator" cdkDrag cdkDragLockAxis="x" (cdkDragMoved)="seperatorMoved($event)"
   (cdkDragStarted)="seperatorMoveStart($event)" (cdkDragEnded)="seperatorMoveEnd($event)"></div>
-<section class="time-capsule">
-  <router-outlet></router-outlet>
+<app-player></app-player>
+<section class="track-details">
+  <app-track-details></app-track-details>
 </section>

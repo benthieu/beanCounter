@@ -1,7 +1,8 @@
 import {Injectable, NgZone} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {LocalStorageService} from '../local-storage/local-storage.service';
 import {downloadStatus} from '../ytdownload/ytdownload.service';
+import {switchMap} from 'rxjs/operators';
 const uuidv4 = require('uuid/v4');
 
 @Injectable({
@@ -11,6 +12,7 @@ export class TrackService {
 
   private trackList = new BehaviorSubject<Array<Track>>([]);
   private tracks: Array<Track>;
+  private activatedTrack: string;
 
   constructor(private localStorageService: LocalStorageService,
     private _ngZone: NgZone) {
@@ -27,8 +29,21 @@ export class TrackService {
     });
   }
 
+  public activateTrack(track: Track): void {
+    this.activatedTrack = track.id;
+    this.trackList.next(this.tracks);
+  }
+
   public getTracks(): Observable<Array<Track>> {
     return this.trackList.asObservable();
+  }
+
+  public getActiveTrack(): Observable<Track> {
+    return this.trackList.pipe(
+      switchMap((tracks: Array<Track>) => {
+        return of(tracks.find((track: Track) => track.id === this.activatedTrack));
+      })
+    );
   }
 
   public setTracks(updateStorage: boolean = true): void {
@@ -82,4 +97,5 @@ export interface Track {
   artist?: string;
   title?: string;
   progress?: number;
+  filePath?: string;
 }

@@ -10,22 +10,21 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import 'reflect-metadata';
 import '../polyfills';
 import {AddLinkModule} from './add-link/add-link.module';
-import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {CoreModule} from './core/core.module';
 import {DownloadStatusModule} from './download-status/download-status.module';
 import {SharedModule} from './shared/shared.module';
-import {TrackDetailsComponent} from './track-details/track-details/track-details.component';
+import {TrackDetailsModule} from './track-details/track-details.module';
+import {PlayerModule} from './player/player.module';
 
 @NgModule({
-  declarations: [AppComponent, TrackDetailsComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     CoreModule,
     SharedModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     MatButtonModule,
     DragDropModule,
@@ -34,6 +33,8 @@ import {TrackDetailsComponent} from './track-details/track-details/track-details
     MatIconModule,
     MatTooltipModule,
     DownloadStatusModule,
+    TrackDetailsModule,
+    PlayerModule,
     AddLinkModule
   ],
   providers: [

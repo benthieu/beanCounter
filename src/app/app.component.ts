@@ -78,4 +78,8 @@ export class AppComponent implements OnInit {
     this.renderer.removeClass(this.elRef.nativeElement, 'seperatorMoving');
     event.source.reset();
   }
+
+  public activateTrack(track: Track): void {
+    this.trackService.activateTrack(track);
+  }
 }

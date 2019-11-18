@@ -1,0 +1,25 @@
+<div class="player-wrapper">
+  <svg class="pt-spinner" viewBox="0 0 100 100">
+    <path class="pt-spinner-track" d="M 50,50 m 0,-44.5 a 44.5,44.5 0 1 1 0,89 a 44.5,44.5 0 1 1 0,-89"></path>
+    <path class="pt-spinner-head" d="M 50,50 m 0,-44.5 a 44.5,44.5 0 1 1 0,89 a 44.5,44.5 0 1 1 0,-89" pathLength="280"
+      style="stroke-dasharray: 280, 280; stroke-dashoffset: 279;"></path>
+  </svg>
+  <span class="time">
+    0:00:00
+  </span>
+  <div class="controls">
+    <div class="controls_wrapper">
+      <button mat-icon-button matTooltip="Previous" (click)="replay10()">
+        <mat-icon>replay_10</mat-icon>
+      </button>
+
+      <button mat-icon-button matTooltip="Play" (click)="play()">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+
+      <button mat-icon-button matTooltip="Stop" (click)="stop()">
+        <mat-icon>stop</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

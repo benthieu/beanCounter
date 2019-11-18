@@ -15,10 +15,8 @@ export class DownloadManagerService {
     this.trackService.getTracks().subscribe((tracks: Array<Track>) => {
       tracks = JSON.parse(JSON.stringify(tracks));
       const progressing = tracks.find((track: Track) => track.state === downloadStatus.PROGRESS);
-      console.log('progressing', progressing);
       if (!progressing) {
         const nextTrack = tracks.find((track: Track) => track.state === downloadStatus.UNINITIALIZED);
-        console.log('nextTrack', nextTrack);
         if (nextTrack) {
           this.startAndWatchDownload(nextTrack);
         }
@@ -40,6 +38,7 @@ export class DownloadManagerService {
         if (status === downloadStatus.FINISHED) {
           track.artist = data.artist ? data.artist : 'Unknown';
           track.title = data.title ? data.title : 'Unknown';
+          track.filePath = data.file ? data.file : '';
         }
         this.trackService.updateTrack(track, toDisk);
       });
