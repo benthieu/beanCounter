@@ -1,35 +1,37 @@
 <mat-toolbar color="primary">
-  <span>Spotifly</span>
+  <span class="title">Spotifly</span>
   <button mat-icon-button matTooltip="Add new track to download" (click)="addTrack()">
     <mat-icon>add_circle_outline</mat-icon>
   </button>
-  <button mat-icon-button matTooltip="Set download folder">
+  <span class="folder">
+    {{ downloadFolder }}
+  </span>
+  <button mat-icon-button matTooltip="Set download folder" (click)="selectFolder()">
     <mat-icon>drive_folder_upload</mat-icon>
   </button>
 </mat-toolbar>
 <aside class="track-list">
 
-
-  <ng-container *ngIf="(trackList$ | async) as tracks">
-    <ul class="yt-table">
-      <li class="header">
-        <span>Date</span>
-        <span>Link-Id</span>
-        <span>Artist</span>
-        <span>Title</span>
-        <span>State</span>
-      </li>
-      <li *ngFor="let track of tracks">
-          <span>{{ track.createDate | date:'dd.MM.yyyy, HH:mm' }}</span>
-          <span>{{ track.link }}</span>
-          <span>{{ track.artist }}</span>
-          <span>{{ track.title }}</span>
-          <span>
-            <app-download-status [track]="track"></app-download-status>
-          </span>
-      </li>
-    </ul>
-  </ng-container>
+  <ul class="yt-table">
+    <li class="header">
+      <span>Date</span>
+      <span>Link-Id</span>
+      <span>Artist</span>
+      <span>Title</span>
+      <span>State</span>
+    </li>
+    <ng-container *ngIf="(trackList$ | async) as tracks">
+    <li *ngFor="let track of tracks">
+      <span>{{ track.createDate | date:'dd.MM.yyyy, HH:mm' }}</span>
+      <span>{{ track.link }}</span>
+      <span>{{ track.artist }}</span>
+      <span>{{ track.title }}</span>
+      <span>
+        <app-download-status [state]="track.state" [progress]="track.progress"></app-download-status>
+      </span>
+    </li>
+    </ng-container>
+  </ul>
 
 
 </aside>

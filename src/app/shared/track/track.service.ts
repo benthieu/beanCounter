@@ -24,7 +24,7 @@ export class TrackService {
         this.trackList.next(storeData);
         resolve();
       });
-    })
+    });
   }
 
   public getTracks(): Observable<Array<Track>> {

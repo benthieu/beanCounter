@@ -15,8 +15,10 @@ export class DownloadManagerService {
     this.trackService.getTracks().subscribe((tracks: Array<Track>) => {
       tracks = JSON.parse(JSON.stringify(tracks));
       const progressing = tracks.find((track: Track) => track.state === downloadStatus.PROGRESS);
+      console.log('progressing', progressing);
       if (!progressing) {
         const nextTrack = tracks.find((track: Track) => track.state === downloadStatus.UNINITIALIZED);
+        console.log('nextTrack', nextTrack);
         if (nextTrack) {
           this.startAndWatchDownload(nextTrack);
         }
@@ -29,6 +31,8 @@ export class DownloadManagerService {
       .subscribe(([status, data]) => {
         let toDisk = true;
         track.state = status;
+        console.log('status', status);
+        console.log('data', data);
         if (status === downloadStatus.PROGRESS) {
           track.progress = data.progress.percentage;
           toDisk = false;

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import * as YoutubeMp3Downloader from 'youtube-mp3-downloader';
 import {ElectronService} from '../../core/services';
+import {SettingsService} from '../settings/settings.service';
 const appRootDir = require('app-root-dir').get();
 
 
@@ -13,14 +14,19 @@ export class YTDownloadService {
   private downloader: YoutubeMp3Downloader;
   private watchers: Array<DownloadWatcher>;
 
-  constructor(private electronService: ElectronService) {
+  constructor(private electronService: ElectronService,
+    private settingsService: SettingsService) {
     this.watchers = [];
     this.downloader = new YoutubeMp3Downloader({
       'ffmpegPath': `${appRootDir}/node_modules/ffmpeg-static/bin/darwin/x64/ffmpeg`,
-      'outputPath': `${this.electronService.remote.app.getAppPath()}/userdata`,
+      'outputPath': ``,
       'youtubeVideoQuality': 'highest',
       'queueParallelism': 2,
       'progressTimeout': 2000
+    });
+
+    this.settingsService.getSetting('downloadFolder').subscribe((folder: string) => {
+      (this.downloader as any).outputPath = folder;
     });
 
     this.downloader.on('finished', (error, data) => {
@@ -32,7 +38,10 @@ export class YTDownloadService {
     });
 
     this.downloader.on('error', (error, data) => {
-      const watcher = this.getWatcher(data.videoId);
+      let watcher = this.getLatestWatcher();
+      if (data && data.videoId) {
+        watcher = this.getWatcher(data.videoId);
+      }
       if (watcher) {
         watcher.status.next([downloadStatus.ERROR, error]);
         watcher.status.complete();
@@ -49,6 +58,9 @@ export class YTDownloadService {
 
   public getWatcher(link: string): DownloadWatcher {
     return this.watchers.find(watcher => watcher.id === link);
+  }
+  public getLatestWatcher(): DownloadWatcher {
+    return this.watchers[this.watchers.length - 1];
   }
 
   public download(link: string): DownloadWatcher {

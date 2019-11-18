@@ -18,7 +18,7 @@ export class LocalStorageService {
   public async getStorage(identifier: string): Promise<any> {
     return new Promise((resolve) => {
       Storage.get(identifier, (error, storageData: any) => {
-        if (storageData && storageData.length) {
+        if (storageData) {
           return resolve(storageData);
         }
       });

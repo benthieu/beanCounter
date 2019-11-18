@@ -13,11 +13,12 @@ import {AddLinkModule} from './add-link/add-link.module';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {CoreModule} from './core/core.module';
-import {SharedModule} from './shared/shared.module';
 import {DownloadStatusModule} from './download-status/download-status.module';
+import {SharedModule} from './shared/shared.module';
+import {TrackDetailsComponent} from './track-details/track-details/track-details.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, TrackDetailsComponent],
   imports: [
     BrowserModule,
     FormsModule,

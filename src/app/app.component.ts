@@ -1,14 +1,13 @@
-import {CdkDragMove, CdkDragEnd, CdkDragStart} from '@angular/cdk/drag-drop';
+import {CdkDragEnd, CdkDragMove, CdkDragStart} from '@angular/cdk/drag-drop';
 import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {tap, map, switchMap} from 'rxjs/operators';
-import {AppConfig} from '../environments/environment';
-import {ElectronService} from './core/services';
-import {TrackService, Track} from './shared/track/track.service';
-import {YTDownloadService, downloadStatus, DownloadWatcher} from './shared/ytdownload/ytdownload.service';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {Observable} from 'rxjs';
+import {AppConfig} from '../environments/environment';
 import {AddLinkComponent} from './add-link/add-link.component';
+import {ElectronService} from './core/services';
 import {DownloadManagerService} from './shared/download-manager/download-manager.service';
+import {SettingsService} from './shared/settings/settings.service';
+import {Track, TrackService} from './shared/track/track.service';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +16,7 @@ import {DownloadManagerService} from './shared/download-manager/download-manager
 })
 export class AppComponent implements OnInit {
   public trackList$: Observable<Array<Track>>;
+  public downloadFolder: string;
 
   constructor(
     public electronService: ElectronService,
@@ -24,7 +24,8 @@ export class AppComponent implements OnInit {
     private elRef: ElementRef,
     private renderer: Renderer2,
     private _bottomSheet: MatBottomSheet,
-    private downloadManagerService: DownloadManagerService
+    private downloadManagerService: DownloadManagerService,
+    private settingsService: SettingsService
   ) {
     console.log('AppConfig', AppConfig);
 
@@ -39,15 +40,28 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.trackService.loadFromStorage().then(() => {
-      this.trackList$ = this.trackService.getTracks();
-      this.downloadManagerService.startWatching();
+    this.trackList$ = this.trackService.getTracks();
+    this.downloadManagerService.startWatching();
+    this.trackService.loadFromStorage();
+    this.settingsService.loadFromStorage();
+    this.settingsService.getSetting('downloadFolder').subscribe((folder: string) => {
+      console.log('downloadFolder', folder);
+      this.downloadFolder = folder;
     });
   }
 
   public addTrack(): void {
-    // this.trackService.newTrack('test');
     this._bottomSheet.open(AddLinkComponent);
+  }
+
+  public selectFolder(): void {
+    this.electronService.dialog.showOpenDialog(this.electronService.remote.getCurrentWindow(), {
+      properties: ['openDirectory']
+    }).then((folder: Electron.OpenDialogReturnValue) => {
+      if (folder.filePaths[0]) {
+        this.settingsService.setSetting('downloadFolder', folder.filePaths[0]);
+      }
+    });
   }
 
   public seperatorMoved(event: CdkDragMove): void {

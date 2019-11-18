@@ -9,7 +9,7 @@ import {TrackService} from '../shared/track/track.service';
   templateUrl: './add-link.component.html',
   styleUrls: ['./add-link.component.scss']
 })
-export class AddLinkComponent implements OnInit, OnDestroy {
+export class AddLinkComponent implements OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
   @ViewChild('linkRef', {static: false}) linkRef: ElementRef;
@@ -24,19 +24,18 @@ export class AddLinkComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-  }
-
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }
 
   public addLink(): void {
-    const validatedLink = this.youtube_parser(this.link);
-    if (validatedLink) {
-      this.trackService.newTrack(validatedLink.toString());
-    }
+    this.link.split('\n').forEach((line: string) => {
+      const validatedLink = this.youtube_parser(line);
+      if (validatedLink) {
+        this.trackService.newTrack(validatedLink.toString());
+      }
+    });
     this._bottomSheetRef.dismiss();
   }
 
