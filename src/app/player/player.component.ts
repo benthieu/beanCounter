@@ -70,8 +70,7 @@ export class PlayerComponent implements OnInit {
       this.intervalWatcher = setInterval(() => {
         this.setProgress();
       }, 1000);
-    }
-    else {
+    } else {
       if (this.trackService.activatedTrack) {
         this.trackService.playActivatedTrack();
       }
@@ -87,6 +86,16 @@ export class PlayerComponent implements OnInit {
   }
 
   stop(): void {
+    // i don't know what i'm doing
+    this.playingTrack = undefined;
+    this.isPlaying = false;
+    this.el.nativeElement.pause();
+    this.trackService.unsetPlayingTrack();
+    this.playingTrack = undefined;
+    this.el.nativeElement.currentTime = 0;
+    this.currentTime = this.formatSeconds(0);
+    this.circleAngle = 279;
+    clearInterval(this.intervalWatcher);
   }
 
 }

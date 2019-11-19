@@ -21,7 +21,7 @@
       <span class="label">Title</span>
       <span class="value">{{ activeTrack.title }}</span>
     </li>
-    <li *ngIf="activeTrack.filePath">
+    <li *ngIf="activeTrack.filePath && fileSize">
       <span class="label">File</span>
       <span class="value">{{ activeTrack.filePath }}</span>
     </li>
@@ -31,7 +31,7 @@
     </li>
   </ul>
   <div class="actions">
-    <div class="action">
+    <div class="action" *ngIf="fileSize">
       <button mat-icon-button matTooltip="Play track" (click)="playTrack()">
         <mat-icon>play_arrow</mat-icon>
       </button>

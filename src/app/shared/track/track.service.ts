@@ -45,6 +45,11 @@ export class TrackService {
     this.trackList.next(this.tracks);
   }
 
+  public unsetPlayingTrack(): void {
+    this.playingTrack = '';
+    this.trackList.next(this.tracks);
+  }
+
   public getTracks(): Observable<Array<Track>> {
     return this.trackList.asObservable();
   }

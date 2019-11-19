@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Track, TrackService} from '../shared/track/track.service';
 const fs = require('fs');
 
@@ -12,16 +12,20 @@ export class TrackDetailsComponent implements OnInit {
   public activeTrack: Track;
   public fileSize: string;
 
-  constructor(private trackService: TrackService) { }
+  constructor(private trackService: TrackService) {}
 
   ngOnInit() {
     this.trackService.getActiveTrack().subscribe((track: Track) => {
       this.fileSize = '';
       this.activeTrack = track;
       if (track && track.filePath) {
-        const size = fs.statSync(track.filePath).size;
-        if (size) {
-          this.fileSize = (size / (1024 * 1024)).toFixed(2) + ' Mb';
+        try {
+          const size = fs.statSync(track.filePath).size;
+          if (size) {
+            this.fileSize = (size / (1024 * 1024)).toFixed(2) + ' Mb';
+          }
+        } catch (err) {
+          console.log('it does not exist');
         }
       }
     });
