@@ -81,6 +81,18 @@
     }
   }
 
+  div.add_button_bottom {
+    border-top: 2px dashed rgba(92, 112, 128, 0.1);
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    color: rgba(92, 112, 128, 0.1);
+    padding: 10px;
+    mat-icon {
+      transform: scale(2);
+    }
+  }
+
   table {
     width: 100%;
   }

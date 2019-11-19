@@ -21,17 +21,22 @@
       <span>State</span>
     </li>
     <ng-container *ngIf="(trackList$ | async) as tracks">
-    <li *ngFor="let track of tracks" (click)="activateTrack(track)" [class.activated]="track.id===activatedTrackId">
-      <span>{{ track.createDate | date:'dd.MM.yyyy, HH:mm' }}</span>
-      <span>{{ track.link }}</span>
-      <span>{{ track.artist }}</span>
-      <span>{{ track.title }}</span>
-      <span>
-        <app-download-status [state]="track.state" [progress]="track.progress"></app-download-status>
-      </span>
-    </li>
+      <li *ngFor="let track of tracks" (click)="activateTrack(track)" [class.activated]="track.id===activatedTrackId">
+        <span>{{ track.createDate | date:'dd.MM.yyyy, HH:mm' }}</span>
+        <span>{{ track.link }}</span>
+        <span>{{ track.artist }}</span>
+        <span>{{ track.title }}</span>
+        <span>
+          <app-download-status [state]="track.state" [progress]="track.progress"></app-download-status>
+        </span>
+      </li>
     </ng-container>
   </ul>
+  <div class="add_button_bottom">
+    <button mat-icon-button matTooltip="Add new track to download" (click)="addTrack()">
+      <mat-icon>add_circle_outline</mat-icon>
+    </button>
+  </div>
 
 
 </aside>
