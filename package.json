@@ -88,6 +88,6 @@
     "fluent-ffmpeg": "^2.1.2",
     "normalize.css": "^8.0.1",
     "uuid": "^3.3.3",
-    "youtube-mp3-downloader": "^0.6.3"
+    "youtube-mp3-downloader": "git://github.com/benthieu/youtube-mp3-downloader.git#master"
   }
 }
