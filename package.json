@@ -52,6 +52,8 @@
     "@angular/router": "13.0.1",
     "rxjs": "7.4.0",
     "tslib": "^2.1.0",
+    "uuid": "^8.3.2",
+    "youtube-dl-exec": "^2.0.2",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

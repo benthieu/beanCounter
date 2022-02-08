@@ -1,7 +1,8 @@
-import { app, BrowserWindow, screen } from 'electron';
-import * as path from 'path';
+import {app, BrowserWindow, ipcMain, screen} from 'electron';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as url from 'url';
+import * as youtubeDL from 'youtube-dl-exec';
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
@@ -16,8 +17,8 @@ function createWindow(): BrowserWindow {
   win = new BrowserWindow({
     x: 0,
     y: 0,
-    width: size.width,
-    height: size.height,
+    width: 800,
+    height: 150,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve) ? true : false,
@@ -25,6 +26,35 @@ function createWindow(): BrowserWindow {
     },
   });
 
+  ipcMain.on('resize', (event, data) => {
+    win.setSize(data.width, data.height);
+  })
+
+  ipcMain.on('downloadYT', (event, data) => {
+    const subprocess = youtubeDL.exec(data.link, {
+      extractAudio: true,
+      audioFormat: 'mp3'
+    });
+    let lastProcess = 0;
+    let destination = '';
+    subprocess.stdout.on('data', (process) => {
+      let processText = '';
+      process.forEach((num) => {
+        processText += (String.fromCharCode(num));
+      });
+      let processPercent = processText.match(/([0-9]){1,3}([.])?([0-9]){1,3}?([%])/g);
+      if (!destination && processText.match(/Destination:\s*([^\n\r]*)/g)) {
+        destination = processText.match(/Destination:\s*([^\n\r]*)/g)[0].replace('Destination: ', '');
+      }
+      lastProcess = processPercent ? parseFloat(processPercent[0]) : lastProcess;
+      event.sender.send('downloadYTProcess', {
+        process: lastProcess,
+        destination: destination,
+        link: data.link,
+        corrId: data.corrId
+      })
+    });
+  });
 
   if (serve) {
     win.webContents.openDevTools();
@@ -37,7 +67,7 @@ function createWindow(): BrowserWindow {
     let pathIndex = './index.html';
 
     if (fs.existsSync(path.join(__dirname, '../dist/index.html'))) {
-       // Path when running electron in local folder
+      // Path when running electron in local folder
       pathIndex = '../dist/index.html';
     }
 
