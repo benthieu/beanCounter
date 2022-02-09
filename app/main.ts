@@ -3,6 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
 import * as youtubeDL from 'youtube-dl-exec';
+var ffmpeg = require('ffmpeg-static-electron');
+
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
@@ -41,6 +43,7 @@ function createWindow(): BrowserWindow {
       const subprocess = ytDL.exec(data.link, {
         extractAudio: true,
         audioFormat: 'mp3',
+        ffmpegLocation: ffmpeg.path,
         output: path.join(app.getPath('downloads'), '/').concat('%(title)s.%(ext)s')
       }, {encoding: 'utf-8'});
       let lastProcess = 0;
@@ -69,6 +72,15 @@ function createWindow(): BrowserWindow {
           corrId: data.corrId
         })
       });
+    }).catch((err) => {
+      event.sender.send('downloadYTProcess', {
+        process: 0,
+        title: '',
+        link: data.link,
+        thumbnail: '',
+        error: err,
+        corrId: data.corrId
+      })
     });
   });
 

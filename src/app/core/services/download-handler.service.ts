@@ -49,7 +49,7 @@ export class DownloadHandlerService {
     if (replaceIndex != -1) {
       status[replaceIndex] = data;
     } else {
-      status.push(data);
+      status.unshift(data);
     }
     this.ngZone.run(() => {
       this.loaderStatus$.next(status);

@@ -1,5 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Observable, tap} from 'rxjs';
 import {ElectronService} from '../core/services';
 import {DownloadHandlerService, DownloadStatus} from '../core/services/download-handler.service';
@@ -17,17 +16,15 @@ export class HomeComponent implements OnInit {
   public loaderStatus$: Observable<Array<DownloadStatus>>;
   public lastCount = 0;
   
-  constructor(private router: Router,
-    private downloadHandlerService: DownloadHandlerService,
-    private electronService: ElectronService,
-    private cd: ChangeDetectorRef) { }
+  constructor(private downloadHandlerService: DownloadHandlerService,
+    private electronService: ElectronService) { }
 
   ngOnInit(): void {
     this.loaderStatus$ = this.downloadHandlerService.getLoaderStatus().pipe(
       tap((changes) => {
         console.log('changes', changes);
         // this.cd.detectChanges();
-        if (changes.length !== this.lastCount) {
+        if (changes.length !== this.lastCount && changes.length <= 5) {
           this.lastCount = changes.length;
           this.electronService.ipcRenderer.send('resize', {
             count: this.lastCount
