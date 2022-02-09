@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, screen} from 'electron';
+import {app, BrowserWindow, ipcMain} from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
@@ -8,17 +8,18 @@ let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
-function createWindow(): BrowserWindow {
+const ytDL = youtubeDL.create(path.join(__dirname, '/../node_modules/youtube-dl-exec/bin/youtube-dl'));
 
-  const electronScreen = screen;
-  const size = electronScreen.getPrimaryDisplay().workAreaSize;
+function createWindow(): BrowserWindow {
+  // const electronScreen = screen;
+  // const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
   // Create the browser window.
   win = new BrowserWindow({
     x: 0,
     y: 0,
-    width: 800,
-    height: 150,
+    width: 630,
+    height: 101,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve) ? true : false,
@@ -26,33 +27,48 @@ function createWindow(): BrowserWindow {
     },
   });
 
-  ipcMain.on('resize', (event, data) => {
-    win.setSize(data.width, data.height);
-  })
+  win.setResizable(false);
 
+  ipcMain.on('resize', (event, data) => {
+    win.setSize(630, 101+data.count*104+(data.count > 0 ? 20 : 0));
+  })
+  
   ipcMain.on('downloadYT', (event, data) => {
-    const subprocess = youtubeDL.exec(data.link, {
-      extractAudio: true,
-      audioFormat: 'mp3'
-    });
-    let lastProcess = 0;
-    let destination = '';
-    subprocess.stdout.on('data', (process) => {
-      let processText = '';
-      process.forEach((num) => {
-        processText += (String.fromCharCode(num));
+    ytDL(data.link, {
+      printJson: true,
+      skipDownload: true
+    }).then(output => {
+      const subprocess = ytDL.exec(data.link, {
+        extractAudio: true,
+        audioFormat: 'mp3',
+        output: path.join(app.getPath('downloads'), '/').concat('%(title)s.%(ext)s')
+      }, {encoding: 'utf-8'});
+      let lastProcess = 0;
+      subprocess.stderr.on('data', (error) => {
+        event.sender.send('downloadYTProcess', {
+          process: lastProcess,
+          title: output.title,
+          link: data.link,
+          thumbnail: output.thumbnail,
+          error: error,
+          corrId: data.corrId
+        })
       });
-      let processPercent = processText.match(/([0-9]){1,3}([.])?([0-9]){1,3}?([%])/g);
-      if (!destination && processText.match(/Destination:\s*([^\n\r]*)/g)) {
-        destination = processText.match(/Destination:\s*([^\n\r]*)/g)[0].replace('Destination: ', '');
-      }
-      lastProcess = processPercent ? parseFloat(processPercent[0]) : lastProcess;
-      event.sender.send('downloadYTProcess', {
-        process: lastProcess,
-        destination: destination,
-        link: data.link,
-        corrId: data.corrId
-      })
+      subprocess.stdout.on('data', (process) => {
+        let processText = '';
+        process.forEach((num) => {
+          processText += (String.fromCharCode(num));
+        });
+        let processPercent = processText.match(/([0-9]){1,3}([.])?([0-9]){1,3}?([%])/g);
+        lastProcess = processPercent ? parseFloat(processPercent[0]) : lastProcess;
+        event.sender.send('downloadYTProcess', {
+          process: lastProcess,
+          title: output.title,
+          link: data.link,
+          thumbnail: output.thumbnail,
+          corrId: data.corrId
+        })
+      });
     });
   });
 
