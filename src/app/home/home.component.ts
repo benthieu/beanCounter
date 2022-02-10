@@ -22,8 +22,6 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.loaderStatus$ = this.downloadHandlerService.getLoaderStatus().pipe(
       tap((changes) => {
-        console.log('changes', changes);
-        // this.cd.detectChanges();
         if (changes.length !== this.lastCount && changes.length <= 5) {
           this.lastCount = changes.length;
           this.electronService.ipcRenderer.send('resize', {
