@@ -63,6 +63,22 @@
         letter-spacing: 1px;
         border-radius: 2px;
         cursor: pointer;
+        &.video {
+            padding: 0 10px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-left: 1px solid white;
+            svg {
+                width: 20px;
+                path {
+                    fill: white;
+                }
+            }
+        }
+        &:not(.video) {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
     }
 
     .downloads {
@@ -83,10 +99,20 @@
 
             .thumbnail {
                 margin-right: 15px;
+                position: relative;
                 img {
                     width: 110px;
                     height: 60px;
                     object-fit: cover;
+                }
+                > div {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 20px;
+                    height: 20px;
+                    background-color: rgba(255, 255, 255, 0.8);
+                    padding: 3px;
                 }
             }
 
@@ -109,6 +135,7 @@
 
             .controls {
                 width: 40px;
+                position: relative;
                 button {
                     background-color: transparent;
                     border: 0 none;
@@ -129,7 +156,9 @@
                     }
                 }
                 span {
-                    text-align: right;
+                    position: absolute;
+                    right: 0;
+                    text-transform: uppercase;
                     display: block;
                     clear: both;
                     font-size: 12px;
@@ -143,10 +172,13 @@
                 bottom: 0;
                 left: 0;
                 height: 3px;
-                background: #81c784;
+                background: #fdd835;
                 &.error {
-                    background: #EF5350;
+                    background: #ef5350;
                     width: 100% !important;
+                }
+                &.finished {
+                    background: #81c784;
                 }
             }
         }

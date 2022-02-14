@@ -10,9 +10,9 @@
     "!package.json",
     "!package-lock.json"
   ],
-  "extraResources": [
+  "extraFiles": [
     {
-      "from": "dist",
+      "from": "dist_angular",
       "to": "app",
       "filter": [
         "**/*"

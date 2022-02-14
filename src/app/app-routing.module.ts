@@ -1,14 +1,13 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeRoutingModule} from './home/home-routing.module';
+import {HomeComponent} from './home/home.component';
 import {PageNotFoundComponent} from './shared/components';
 
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    component: HomeComponent
   },
   {
     path: '**',
@@ -19,7 +18,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
-    HomeRoutingModule
   ],
   exports: [RouterModule]
 })

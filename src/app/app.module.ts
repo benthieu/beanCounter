@@ -12,9 +12,6 @@ import {HomeModule} from './home/home.module';
 import {SharedModule} from './shared/shared.module';
 
 
-
-
-
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
 

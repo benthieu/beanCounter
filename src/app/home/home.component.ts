@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Observable, tap} from 'rxjs';
 import {ElectronService} from '../core/services';
-import {DownloadHandlerService, DownloadStatus} from '../core/services/download-handler.service';
+import {DownloadHandlerService, YtDownload} from '../core/services/download-handler.service';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
   public youtubeURL: string;
   public fieldFocused = false;
   public inputValid = false;
-  public loaderStatus$: Observable<Array<DownloadStatus>>;
+  public loaderStatus$: Observable<Array<YtDownload>>;
   public lastCount = 0;
   
   constructor(private downloadHandlerService: DownloadHandlerService,
@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
         if (changes.length !== this.lastCount && changes.length <= 5) {
           this.lastCount = changes.length;
           this.electronService.ipcRenderer.send('resize', {
-            count: this.lastCount
+            height: 101+this.lastCount*104+(this.lastCount > 0 ? 20 : 0)
           });
         }
       })
@@ -47,6 +47,12 @@ export class HomeComponent implements OnInit {
 
   public download(): void {
     this.downloadHandlerService.startDownload(this.youtubeURL);
+    this.youtubeURL = '';
+    this.fieldBlur();
+  }
+
+  public downloadVideo(): void {
+    this.downloadHandlerService.startDownload(this.youtubeURL, true);
     this.youtubeURL = '';
     this.fieldBlur();
   }
