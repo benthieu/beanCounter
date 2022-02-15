@@ -105,6 +105,7 @@
   ],
   "build": {
     "appId": "spotifly.mathieu.website",
+    "asarUnpack": ["yt-dlp"],
     "mac": {
       "category": "entertainment"
     },

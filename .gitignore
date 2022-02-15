@@ -4,10 +4,12 @@
 /dist
 /dist_angular
 /tmp
+/app/yt-dlp
 /out-tsc
 /app-builds
 /release
 main.js
+YtDownloadProcess.js
 src/**/*.js
 !src/karma.conf.js
 *.js.map

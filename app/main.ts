@@ -50,6 +50,7 @@ function createWindow(): BrowserWindow {
       slashes: true
     }));
   }
+  win.setBackgroundColor('#121212');
 
   // Emitted when the window is closed.
   win.on('closed', () => {
